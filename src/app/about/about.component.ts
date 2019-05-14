@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { count } from 'rxjs/operators';
+import { interval, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'about',
@@ -7,31 +7,20 @@ import { count } from 'rxjs/operators';
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
+    const interval$ = interval(1000);
 
-    document.addEventListener('click', evt => {  // mulit value streams that can never complete
-      console.log(evt);
-    });
+    interval$.subscribe((val) =>  console.log('stream 1 =>' + val));
 
-    let counter = 0;
-    setInterval(() => {  // mulit value streams
-      console.log(counter);
-      counter++;
-    }, 1000);
-
-    setTimeout(() => { // A type of stream that will complete
-      console.log('finished...');
-
-    }, 3000);
+    const click$ = fromEvent(document, 'click');
+    click$.subscribe(evt => console.log(evt));
   }
 }
 
-
 /**
- * Streams are collection of values emitted over time
- * and can either complete or not
- *
+ * Observables are blueprints how streams will behave or definitions of values (streams)
+ * An observable will only become a stream once we subscribe to it. Once we have
+ * subscribed to an observable we have created a stream of values *
  */
