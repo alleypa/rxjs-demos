@@ -1,15 +1,18 @@
 
+import { join } from 'path';
 import * as express from 'express';
-import {Application} from "express";
-import {getAllCourses, getCourseById} from "./get-courses.route";
-import {searchLessons} from "./search-lessons.route";
-import {saveCourse} from './save-course.route';
-
-const bodyParser = require('body-parser');
+import * as bodyParser from 'body-parser';
+import { Application } from 'express';
+import { getAllCourses, getCourseById } from './get-courses.route';
+import { searchLessons } from './search-lessons.route';
+import { saveCourse } from './save-course.route';
 
 const app: Application = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use('/course-images', express.static(join(__dirname, 'images')));
 
 app.route('/api/courses').get(getAllCourses);
 
@@ -19,11 +22,6 @@ app.route('/api/lessons').get(searchLessons);
 
 app.route('/api/courses/:id').put(saveCourse);
 
-
-
 const httpServer = app.listen(9000, () => {
-    console.log("HTTP REST API Server running at http://localhost:" + httpServer.address().port);
+    console.log('HTTP REST API Server running at http://localhost:' + httpServer.address().port);
 });
-
-
-
